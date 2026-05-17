@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Café &amp; Co. — Fidelidade</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0;}
+    :root{
+      --red:#C0394B;--red-light:#E8677A;--red-pale:#FAE8EB;--red-dark:#8B1A28;
+      --coffee:#3D1F0D;--coffee-mid:#7A4426;--coffee-light:#B07848;
+      --beige:#F5EFE6;--beige-dark:#E8DDD0;--beige-mid:#D4C4B0;
+      --white:#FFFDF9;--text:#2A1208;--text-muted:#7A5C48;
+      --radius:14px;--radius-sm:8px;
+    }
+    body{font-family:'DM Sans',sans-serif;background:var(--beige);min-height:100vh;display:flex;flex-direction:column;align-items:center;}
+    h1,h2,h3,.display{font-family:'Playfair Display',serif;}
+
+    .app{width:100%;max-width:480px;background:var(--beige);min-height:100vh;display:flex;flex-direction:column;position:relative;}
+
+    /* TAB BAR */
+    .tab-bar{display:flex;background:var(--coffee);position:sticky;top:0;z-index:20;}
+    .tab{flex:1;padding:12px 2px 10px;font-size:10px;font-weight:500;text-align:center;cursor:pointer;color:rgba(255,255,255,0.5);border:none;background:none;font-family:'DM Sans',sans-serif;transition:all 0.2s;letter-spacing:0.02em;}
+    .tab i{display:block;font-size:18px;margin-bottom:2px;}
+    .tab.active{color:#fff;background:rgba(255,255,255,0.08);}
+    .tab.active i{color:var(--red-light);}
+
+    /* PAGES */
+    .page{display:none;flex:1;}
+    .page.active{display:block;}
+
+    /* HERO */
+    .hero{background:var(--red);padding:1.5rem 1.25rem 2rem;position:relative;overflow:hidden;}
+    .hero::before{content:'';position:absolute;top:-40px;right:-40px;width:160px;height:160px;border-radius:50%;background:rgba(255,255,255,0.06);}
+    .hero::after{content:'';position:absolute;bottom:-30px;left:20px;width:100px;height:100px;border-radius:50%;background:rgba(255,255,255,0.04);}
+    .logo-area{display:flex;align-items:center;gap:12px;margin-bottom:1.25rem;position:relative;}
+    .logo-mark{width:48px;height:48px;border-radius:12px;background:var(--white);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+    .logo-mark img{width:36px;height:36px;object-fit:contain;display:block;}
+    .logo-mark .placeholder-logo{width:28px;height:28px;}
+    .logo-name .brand{font-family:'Playfair Display',serif;font-size:18px;font-weight:600;color:#fff;line-height:1;}
+    .logo-name .tagline{font-size:11px;color:rgba(255,255,255,0.65);margin-top:2px;}
+    .hero-greeting{font-size:13px;color:rgba(255,255,255,0.75);margin-bottom:4px;position:relative;}
+    .hero-pts{font-family:'Playfair Display',serif;font-size:44px;font-weight:500;color:#fff;line-height:1;position:relative;}
+    .hero-sub{font-size:13px;color:rgba(255,255,255,0.8);margin:2px 0 14px;position:relative;}
+    .hero-badge{display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,0.15);border-radius:99px;padding:4px 14px;font-size:12px;color:#fff;position:relative;}
+    .progress-wrap{margin-top:14px;position:relative;}
+    .progress-label{font-size:11px;color:rgba(255,255,255,0.65);margin-bottom:5px;}
+    .progress-track{background:rgba(255,255,255,0.2);border-radius:99px;height:5px;overflow:hidden;}
+    .progress-fill{height:100%;border-radius:99px;background:#fff;transition:width 0.6s ease;}
+
+    /* CONTENT */
+    .content{padding:1.25rem;}
+    .section-label{font-size:11px;font-weight:500;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.07em;margin-bottom:10px;}
+
+    /* STAMP CARD */
+    .stamp-card{background:var(--white);border-radius:var(--radius);padding:1.25rem;margin-bottom:1.25rem;border:1px solid var(--beige-dark);}
+    .stamp-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;}
+    .stamp-title{font-family:'Playfair Display',serif;font-size:16px;color:var(--text);}
+    .stamp-count-txt{font-size:12px;color:var(--text-muted);}
+    .stamps{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;}
+    .stamp{aspect-ratio:1;border-radius:50%;border:1.5px solid var(--beige-mid);display:flex;align-items:center;justify-content:center;background:var(--beige);font-size:16px;transition:all 0.2s;}
+    .stamp.filled{background:var(--red-pale);border-color:var(--red-light);color:var(--red);}
+    .stamp.reward{background:var(--red);border-color:var(--red-dark);color:#fff;animation:pulse 2s infinite;}
+    @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.07)}}
+    .stamp-hint{font-size:12px;color:var(--text-muted);margin-top:10px;}
+    .stamp-hint strong{color:var(--red);}
+
+    /* EARN */
+    .earn-card{background:var(--white);border-radius:var(--radius);overflow:hidden;margin-bottom:1.25rem;border:1px solid var(--beige-dark);}
+    .earn-row{display:flex;align-items:center;gap:12px;padding:12px 1rem;border-bottom:1px solid var(--beige);}
+    .earn-row:last-child{border-bottom:none;}
+    .earn-icon{width:36px;height:36px;border-radius:10px;background:var(--red-pale);display:flex;align-items:center;justify-content:center;font-size:17px;color:var(--red);flex-shrink:0;}
+    .earn-info{flex:1;}
+    .earn-name{font-size:14px;font-weight:500;color:var(--text);}
+    .earn-desc{font-size:12px;color:var(--text-muted);}
+    .earn-pts{font-size:13px;font-weight:500;color:var(--red);}
+
+    /* REWARDS */
+    .rewards-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:1.25rem;}
+    .reward-card{background:var(--white);border-radius:var(--radius);padding:1rem;cursor:pointer;border:1px solid var(--beige-dark);transition:all 0.18s;position:relative;}
+    .reward-card:hover:not(.locked){border-color:var(--red-light);background:var(--red-pale);}
+    .reward-card.locked{opacity:0.5;cursor:default;}
+    .reward-icon{font-size:24px;color:var(--red);margin-bottom:6px;}
+    .reward-name{font-family:'Playfair Display',serif;font-size:15px;color:var(--text);margin-bottom:2px;}
+    .reward-pts{font-size:12px;color:var(--text-muted);}
+    .reward-badge{position:absolute;top:8px;right:8px;font-size:10px;padding:2px 8px;border-radius:99px;font-weight:500;}
+    .badge-ok{background:var(--red-pale);color:var(--red-dark);}
+    .badge-lock{background:var(--beige-dark);color:var(--text-muted);}
+
+    /* LEVELS */
+    .levels{background:var(--white);border-radius:var(--radius);overflow:hidden;border:1px solid var(--beige-dark);margin-bottom:1.25rem;}
+    .level-row{display:flex;align-items:center;gap:12px;padding:12px 1rem;border-bottom:1px solid var(--beige);}
+    .level-row:last-child{border-bottom:none;}
+    .level-row.current{background:var(--red-pale);}
+    .level-icon{font-size:20px;width:28px;text-align:center;}
+    .level-name{font-size:13px;font-weight:500;color:var(--text);}
+    .level-desc{font-size:11px;color:var(--text-muted);}
+
+    /* HISTORY */
+    .history-card{background:var(--white);border-radius:var(--radius);overflow:hidden;border:1px solid var(--beige-dark);}
+    .history-row{display:flex;align-items:center;gap:12px;padding:12px 1rem;border-bottom:1px solid var(--beige);}
+    .history-row:last-child{border-bottom:none;}
+    .h-icon{width:36px;height:36px;border-radius:10px;background:var(--beige);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;color:var(--coffee-mid);}
+    .h-label{font-size:14px;color:var(--text);}
+    .h-date{font-size:11px;color:var(--text-muted);}
+    .h-pts{font-size:14px;font-weight:500;margin-left:auto;white-space:nowrap;}
+    .pts-plus{color:var(--red);}
+    .pts-minus{color:var(--coffee-mid);}
+
+    /* CADASTRO */
+    .cad-hero{background:var(--coffee);padding:2rem 1.5rem 1.5rem;text-align:center;}
+    .cad-logo{width:64px;height:64px;border-radius:16px;background:var(--white);display:flex;align-items:center;justify-content:center;margin:0 auto 12px;}
+    .cad-logo img{width:44px;height:44px;object-fit:contain;}
+    .cad-brand{font-family:'Playfair Display',serif;font-size:22px;color:#fff;margin-bottom:4px;}
+    .cad-sub{font-size:13px;color:rgba(255,255,255,0.6);}
+    .cad-body{padding:1.5rem 1.25rem;}
+    .cad-title{font-family:'Playfair Display',serif;font-size:20px;color:var(--text);margin-bottom:6px;}
+    .cad-desc{font-size:13px;color:var(--text-muted);margin-bottom:1.5rem;line-height:1.6;}
+    .social-btn{display:flex;align-items:center;gap:12px;width:100%;padding:13px 16px;border-radius:var(--radius-sm);border:1px solid var(--beige-dark);background:var(--white);font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;color:var(--text);cursor:pointer;margin-bottom:10px;transition:all 0.18s;text-align:left;}
+    .social-btn:hover{border-color:var(--red-light);background:var(--red-pale);}
+    .s-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+    .s-google{background:#fff;border:1px solid #e0e0e0;}
+    .s-wa{background:#25D366;}
+    .divider{display:flex;align-items:center;gap:10px;margin:14px 0;color:var(--text-muted);font-size:12px;}
+    .divider::before,.divider::after{content:'';flex:1;height:1px;background:var(--beige-dark);}
+    .manual-fields input{width:100%;padding:11px 14px;border:1px solid var(--beige-dark);border-radius:var(--radius-sm);background:var(--beige);font-family:'DM Sans',sans-serif;font-size:14px;color:var(--text);outline:none;margin-bottom:10px;display:block;}
+    .manual-fields input:focus{border-color:var(--red-light);}
+    .btn-full{width:100%;padding:13px;background:var(--red);color:#fff;border:none;border-radius:var(--radius-sm);font-family:'Playfair Display',serif;font-size:16px;cursor:pointer;transition:background 0.15s;margin-top:4px;}
+    .btn-full:hover{background:var(--red-dark);}
+    .cad-legal{font-size:11px;color:var(--text-muted);text-align:center;margin-top:12px;line-height:1.5;}
+
+    /* WHATSAPP */
+    .wa-hero{background:var(--coffee);padding:1.25rem;display:flex;align-items:center;gap:12px;}
+    .wa-hero-icon{width:44px;height:44px;border-radius:12px;background:#25D366;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+    .wa-hero-title{font-family:'Playfair Display',serif;font-size:18px;color:#fff;}
+    .wa-hero-sub{font-size:12px;color:rgba(255,255,255,0.6);}
+    .wa-content{padding:1.25rem;}
+    .wa-msg-group{margin-bottom:1.25rem;}
+    .wa-msg-label{font-size:11px;font-weight:500;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px;}
+    .wa-bubble{background:var(--white);border-radius:0 12px 12px 12px;padding:12px 14px;margin-bottom:6px;border:1px solid var(--beige-dark);position:relative;max-width:92%;}
+    .wa-bubble::before{content:'';position:absolute;top:0;left:-8px;border:8px solid transparent;border-right-color:var(--beige-dark);border-top:0;}
+    .wa-bubble::after{content:'';position:absolute;top:1px;left:-6px;border:7px solid transparent;border-right-color:var(--white);border-top:0;}
+    .wa-sender{font-size:11px;font-weight:500;color:var(--red);margin-bottom:4px;}
+    .wa-text{font-size:13px;color:var(--text);line-height:1.55;}
+    .wa-time{font-size:10px;color:var(--text-muted);text-align:right;margin-top:4px;}
+    .wa-tag{display:inline-block;background:var(--red-pale);color:var(--red-dark);border-radius:4px;padding:1px 6px;font-size:11px;font-weight:500;}
+
+    /* ADMIN */
+    .stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:1.25rem;}
+    .stat{background:var(--white);border-radius:var(--radius-sm);padding:1rem;border:1px solid var(--beige-dark);}
+    .stat-label{font-size:11px;color:var(--text-muted);margin-bottom:4px;}
+    .stat-value{font-family:'Playfair Display',serif;font-size:24px;color:var(--text);}
+    .add-card{background:var(--white);border-radius:var(--radius);padding:1.25rem;margin-bottom:1.25rem;border:1px solid var(--beige-dark);}
+    .method-tabs{display:flex;gap:6px;margin:10px 0 8px;}
+    .mtab{flex:1;padding:7px 4px;font-size:12px;border:1px solid var(--beige-dark);border-radius:var(--radius-sm);background:var(--beige);cursor:pointer;text-align:center;color:var(--text-muted);font-family:'DM Sans',sans-serif;transition:all 0.15s;}
+    .mtab.active{background:var(--red-pale);border-color:var(--red-light);color:var(--red-dark);font-weight:500;}
+    .method-hint{font-size:12px;color:var(--text-muted);margin-bottom:8px;}
+    .input-row{display:flex;gap:8px;margin-top:8px;}
+    .input-row input{flex:1;padding:8px 12px;border:1px solid var(--beige-dark);border-radius:var(--radius-sm);background:var(--beige);font-family:'DM Sans',sans-serif;font-size:14px;color:var(--text);outline:none;}
+    .input-row input:focus{border-color:var(--red-light);}
+    .btn-primary{padding:8px 16px;background:var(--red);color:#fff;border:none;border-radius:var(--radius-sm);font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;cursor:pointer;white-space:nowrap;transition:background 0.15s;}
+    .btn-primary:hover{background:var(--red-dark);}
+    .client-list{background:var(--white);border-radius:var(--radius);overflow:hidden;border:1px solid var(--beige-dark);}
+    .client-row{display:flex;align-items:center;gap:12px;padding:12px 1rem;border-bottom:1px solid var(--beige);}
+    .client-row:last-child{border-bottom:none;}
+    .avatar{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:500;flex-shrink:0;}
+    .client-name{font-size:14px;font-weight:500;color:var(--text);}
+    .client-sub{font-size:11px;color:var(--text-muted);}
+    .pts-pill{margin-left:auto;background:var(--red-pale);color:var(--red-dark);border-radius:99px;padding:3px 10px;font-size:12px;font-weight:500;}
+
+    /* TOAST */
+    .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--coffee);color:#fff;padding:10px 20px;border-radius:99px;font-size:13px;opacity:0;transition:all 0.3s;pointer-events:none;white-space:nowrap;z-index:100;}
+    .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+  </style>
+</head>
+<body>
+<div class="app">
+
+  <!-- TAB BAR -->
+  <div class="tab-bar">
+    <button class="tab active" onclick="showPage('perfil')" id="tab-perfil"><i class="ti ti-coffee"></i>Perfil</button>
+    <button class="tab" onclick="showPage('resgatar')" id="tab-resgatar"><i class="ti ti-gift"></i>Resgatar</button>
+    <button class="tab" onclick="showPage('historico')" id="tab-historico"><i class="ti ti-clock"></i>Histórico</button>
+    <button class="tab" onclick="showPage('cadastro')" id="tab-cadastro"><i class="ti ti-user-plus"></i>Cadastro</button>
+    <button class="tab" onclick="showPage('whatsapp')" id="tab-whatsapp"><i class="ti ti-brand-whatsapp"></i>WhatsApp</button>
+    <button class="tab" onclick="showPage('admin')" id="tab-admin"><i class="ti ti-layout-dashboard"></i>Painel</button>
+  </div>
+
+  <!-- ══ PERFIL ══ -->
+  <div class="page active" id="page-perfil">
+    <div class="hero">
+      <div class="logo-area">
+        <div class="logo-mark">
+          <!--
+            COMO TROCAR O LOGO:
+            1. Apague as linhas abaixo até </svg>
+            2. Coloque: <img src="logo.png" alt="Logo" />
+            3. Coloque o arquivo logo.png na mesma pasta deste index.html
+          -->
+          <svg class="placeholder-logo" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="14" cy="14" r="13" fill="#FAE8EB" stroke="#C0394B" stroke-width="1.5"/>
+            <path d="M8 18C8 18 9 12 14 11C19 12 20 18 20 18" stroke="#C0394B" stroke-width="1.5" stroke-linecap="round"/>
+            <circle cx="14" cy="9" r="2" fill="#C0394B"/>
+            <path d="M11 18 Q14 22 17 18" stroke="#C0394B" stroke-width="1" stroke-linecap="round" fill="none"/>
+          </svg>
+        </div>
+        <div class="logo-name">
+          <!-- TROQUE "Café & Co." pelo nome da sua cafeteria -->
+          <div class="brand">Café &amp; Co.</div>
+          <div class="tagline">Programa de Fidelidade</div>
+        </div>
+      </div>
+      <!-- TROQUE "Ana Lima" pelo nome do cliente logado -->
+      <div class="hero-greeting">Bem-vinda, Ana Lima ☕</div>
+      <div class="hero-pts" id="disp-pts">320</div>
+      <div class="hero-sub">pontos acumulados</div>
+      <div class="hero-badge" id="disp-level">⭐ Cliente Ouro</div>
+      <div class="progress-wrap">
+        <div class="progress-label" id="prog-label">180 pts para Diamante</div>
+        <div class="progress-track"><div class="progress-fill" id="prog-bar" style="width:64%"></div></div>
+      </div>
+    </div>
+    <div class="content">
+      <p class="section-label">Cartão de carimbos</p>
+      <div class="stamp-card">
+        <div class="stamp-header">
+          <span class="stamp-title">Cafés comprados</span>
+          <span class="stamp-count-txt" id="stamp-txt">7 de 10</span>
+        </div>
+        <div class="stamps" id="stamp-grid"></div>
+        <div class="stamp-hint">Faltam <strong id="stamps-left">3</strong> cafés para ganhar 1 grátis!</div>
+      </div>
+      <p class="section-label">Como ganhar pontos</p>
+      <div class="earn-card">
+        <div class="earn-row">
+          <div class="earn-icon"><i class="ti ti-shopping-bag"></i></div>
+          <div class="earn-info"><div class="earn-name">Por compra</div><div class="earn-desc">Qualquer item do cardápio</div></div>
+          <span class="earn-pts">+5 pts</span>
+        </div>
+        <div class="earn-row">
+          <div class="earn-icon"><i class="ti ti-currency-real"></i></div>
+          <div class="earn-info"><div class="earn-name">Por valor gasto</div><div class="earn-desc">A cada R$10 em compras</div></div>
+          <span class="earn-pts">+1 pt</span>
+        </div>
+        <div class="earn-row">
+          <div class="earn-icon"><i class="ti ti-stamp"></i></div>
+          <div class="earn-info"><div class="earn-name">Cartão de carimbos</div><div class="earn-desc">10 cafés = 1 grátis</div></div>
+          <span class="earn-pts" style="color:var(--coffee-mid)">Grátis!</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ RESGATAR ══ -->
+  <div class="page" id="page-resgatar">
+    <div class="hero" style="padding:1.25rem 1.25rem 1.5rem;">
+      <div style="display:flex;align-items:center;gap:10px;">
+        <div class="logo-mark" style="width:38px;height:38px;border-radius:9px;">
+          <svg class="placeholder-logo" style="width:22px;height:22px;" viewBox="0 0 28 28" fill="none">
+            <circle cx="14" cy="14" r="13" fill="#FAE8EB" stroke="#C0394B" stroke-width="1.5"/>
+            <path d="M8 18C8 18 9 12 14 11C19 12 20 18 20 18" stroke="#C0394B" stroke-width="1.5" stroke-linecap="round"/>
+            <circle cx="14" cy="9" r="2" fill="#C0394B"/>
+          </svg>
+        </div>
+        <div>
+          <div style="font-size:12px;color:rgba(255,255,255,0.7);">Seus pontos</div>
+          <div style="font-family:'Playfair Display',serif;font-size:24px;color:#fff;" id="pts-rewards">320 pts</div>
+        </div>
+      </div>
+    </div>
+    <div class="content">
+      <p class="section-label">Disponíveis para resgatar</p>
+      <div class="rewards-grid">
+        <div class="reward-card" onclick="redeem(this,50,'Café grátis')">
+          <div class="reward-icon"><i class="ti ti-coffee"></i></div>
+          <div class="reward-name">Café grátis</div>
+          <div class="reward-pts">50 pontos</div>
+          <span class="reward-badge badge-ok">Disponível</span>
+        </div>
+        <div class="reward-card" onclick="redeem(this,80,'Desconto 15%')">
+          <div class="reward-icon"><i class="ti ti-discount"></i></div>
+          <div class="reward-name">Desconto 15%</div>
+          <div class="reward-pts">80 pontos</div>
+          <span class="reward-badge badge-ok">Disponível</span>
+        </div>
+        <div class="reward-card" onclick="redeem(this,150,'Produto grátis')">
+          <div class="reward-icon"><i class="ti ti-package"></i></div>
+          <div class="reward-name">Produto grátis</div>
+          <div class="reward-pts">150 pontos</div>
+          <span class="reward-badge badge-ok">Disponível</span>
+        </div>
+        <div class="reward-card locked" id="brinde-card">
+          <div class="reward-icon"><i class="ti ti-gift"></i></div>
+          <div class="reward-name">Brinde surpresa</div>
+          <div class="reward-pts">500 pontos</div>
+          <span class="reward-badge badge-lock" id="brinde-badge">180 pts faltam</span>
+        </div>
+      </div>
+      <p class="section-label">Níveis de fidelidade</p>
+      <div class="levels">
+        <div class="level-row"><div class="level-icon">🥉</div><div><div class="level-name">Bronze</div><div class="level-desc">0–199 pts · bem-vindo!</div></div></div>
+        <div class="level-row current"><div class="level-icon">⭐</div><div><div class="level-name">Ouro — você está aqui</div><div class="level-desc">200–499 pts · bônus 2× no aniversário</div></div></div>
+        <div class="level-row"><div class="level-icon">💎</div><div><div class="level-name">Diamante</div><div class="level-desc">500+ pts · desconto vitalício 10%</div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ HISTÓRICO ══ -->
+  <div class="page" id="page-historico">
+    <div class="content" style="padding-top:1.25rem;">
+      <p class="section-label">Últimas movimentações</p>
+      <div class="history-card" id="history-list"></div>
+    </div>
+  </div>
+
+  <!-- ══ CADASTRO ══ -->
+  <div class="page" id="page-cadastro">
+    <div class="cad-hero">
+      <div class="cad-logo">
+        <svg class="placeholder-logo" style="width:38px;height:38px;" viewBox="0 0 28 28" fill="none">
+          <circle cx="14" cy="14" r="13" fill="#FAE8EB" stroke="#C0394B" stroke-width="1.5"/>
+          <path d="M8 18C8 18 9 12 14 11C19 12 20 18 20 18" stroke="#C0394B" stroke-width="1.5" stroke-linecap="round"/>
+          <circle cx="14" cy="9" r="2" fill="#C0394B"/>
+          <path d="M11 18 Q14 22 17 18" stroke="#C0394B" stroke-width="1" stroke-linecap="round" fill="none"/>
+        </svg>
+      </div>
+      <div class="cad-brand">Café &amp; Co.</div>
+      <div class="cad-sub">Programa de Fidelidade</div>
+    </div>
+    <div class="cad-body">
+      <div class="cad-title">Crie sua conta</div>
+      <div class="cad-desc">Cadastre-se em segundos e comece a acumular pontos na sua próxima visita.</div>
+      <button class="social-btn" onclick="fakeLogin('Google')">
+        <div class="s-icon s-google">
+          <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.18 1.48-4.97 2.31-8.16 2.31-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
+        </div>
+        Continuar com Google
+      </button>
+      <button class="social-btn" onclick="fakeLogin('WhatsApp')">
+        <div class="s-icon s-wa">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.126.556 4.122 1.527 5.854L.057 23.886a.5.5 0 00.611.611l6.032-1.47A11.953 11.953 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22a9.949 9.949 0 01-5.074-1.388l-.361-.214-3.741.912.928-3.741-.233-.381A9.953 9.953 0 012 12C2 6.478 6.478 2 12 2s10 4.478 10 10-4.478 10-10 10z"/></svg>
+        </div>
+        Continuar com WhatsApp
+      </button>
+      <div class="divider">ou preencha seus dados</div>
+      <div class="manual-fields">
+        <input type="text" placeholder="Nome completo" />
+        <input type="tel" placeholder="WhatsApp (para receber atualizações)" />
+        <input type="email" placeholder="E-mail (opcional)" />
+      </div>
+      <button class="btn-full" onclick="fakeLogin('manual')">Criar minha conta</button>
+      <div class="cad-legal">Ao se cadastrar, você concorda com nossos termos de uso. Seus dados são usados apenas para o programa de fidelidade.</div>
+    </div>
+  </div>
+
+  <!-- ══ WHATSAPP ══ -->
+  <div class="page" id="page-whatsapp">
+    <div class="wa-hero">
+      <div class="wa-hero-icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.126.556 4.122 1.527 5.854L.057 23.886a.5.5 0 00.611.611l6.032-1.47A11.953 11.953 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22a9.949 9.949 0 01-5.074-1.388l-.361-.214-3.741.912.928-3.741-.233-.381A9.953 9.953 0 012 12C2 6.478 6.478 2 12 2s10 4.478 10 10-4.478 10-10 10z"/></svg>
+      </div>
+      <div>
+        <div class="wa-hero-title">Mensagens automáticas</div>
+        <div class="wa-hero-sub">Exemplos para o WhatsApp Business</div>
+      </div>
+    </div>
+    <div class="wa-content">
+      <div class="wa-msg-group">
+        <div class="wa-msg-label">Boas-vindas ao cadastrar</div>
+        <div class="wa-bubble"><div class="wa-sender">Café &amp; Co. ☕</div><div class="wa-text">Olá, <span class="wa-tag">Ana</span>! 🎉 Bem-vinda ao nosso programa de fidelidade!<br><br>Você já está cadastrada e pronta para acumular pontos. A cada café, você se aproxima de recompensas incríveis.<br><br>Acesse seu perfil aqui 👉 <span class="wa-tag">link do app</span></div><div class="wa-time">agora ✓✓</div></div>
+      </div>
+      <div class="wa-msg-group">
+        <div class="wa-msg-label">Pontos ganhos após compra</div>
+        <div class="wa-bubble"><div class="wa-sender">Café &amp; Co. ☕</div><div class="wa-text">☕ Obrigada pela visita, <span class="wa-tag">Ana</span>!<br><br>Você ganhou <span class="wa-tag">+8 pontos</span> hoje.<br>Saldo atual: <span class="wa-tag">328 pts</span> · Nível Ouro ⭐<br><br>Faltam apenas <span class="wa-tag">172 pts</span> para o nível Diamante 💎</div><div class="wa-time">09:15 ✓✓</div></div>
+      </div>
+      <div class="wa-msg-group">
+        <div class="wa-msg-label">Quase lá! (faltam poucos cafés)</div>
+        <div class="wa-bubble"><div class="wa-sender">Café &amp; Co. ☕</div><div class="wa-text">Psiu, <span class="wa-tag">Ana</span>! 👀<br><br>Você está a apenas <span class="wa-tag">2 cafés</span> do seu grátis!<br><br>Passe por aqui e complete sua coleção ☕☕ → ☕🎁</div><div class="wa-time">ter, 10:00 ✓✓</div></div>
+      </div>
+      <div class="wa-msg-group">
+        <div class="wa-msg-label">Promoção exclusiva para clientes Ouro</div>
+        <div class="wa-bubble"><div class="wa-sender">Café &amp; Co. ☕</div><div class="wa-text">🌟 Oferta especial para você, <span class="wa-tag">Cliente Ouro</span>!<br><br>Só hoje: <span class="wa-tag">bolo de laranja + café</span> com 20% de desconto.<br><br>Válido até as 18h. Mostre esta mensagem no caixa 😊</div><div class="wa-time">seg, 08:30 ✓✓</div></div>
+      </div>
+      <div class="wa-msg-group">
+        <div class="wa-msg-label">Pontos prestes a expirar</div>
+        <div class="wa-bubble"><div class="wa-sender">Café &amp; Co. ☕</div><div class="wa-text">⏰ <span class="wa-tag">Ana</span>, seus pontos estão vencendo!<br><br>Você tem <span class="wa-tag">50 pts</span> que expiram em <span class="wa-tag">5 dias</span>. Já dá para trocar por um café grátis! ☕<br><br>Resgate aqui 👉 <span class="wa-tag">link do app</span></div><div class="wa-time">qua, 09:00 ✓✓</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ ADMIN ══ -->
+  <div class="page" id="page-admin">
+    <div class="content" style="padding-top:1.25rem;">
+      <p class="section-label">Visão geral</p>
+      <div class="stat-grid">
+        <div class="stat"><div class="stat-label">Clientes</div><div class="stat-value">124</div></div>
+        <div class="stat"><div class="stat-label">Pts dados</div><div class="stat-value">8.4k</div></div>
+        <div class="stat"><div class="stat-label">Resgates</div><div class="stat-value">37</div></div>
+      </div>
+      <p class="section-label">Adicionar pontos</p>
+      <div class="add-card">
+        <div style="font-size:13px;color:var(--text-muted);margin-bottom:6px;">Método</div>
+        <div class="method-tabs">
+          <div class="mtab active" onclick="selMethod(this,'compra')"><i class="ti ti-shopping-bag"></i><br>Por compra</div>
+          <div class="mtab" onclick="selMethod(this,'valor')"><i class="ti ti-currency-real"></i><br>Por valor</div>
+          <div class="mtab" onclick="selMethod(this,'carimbo')"><i class="ti ti-stamp"></i><br>Carimbo</div>
+        </div>
+        <div class="method-hint" id="m-hint">Cada compra = +5 pts automático</div>
+        <div class="input-row">
+          <input type="text" id="cli-search" placeholder="Nome ou CPF do cliente" />
+          <input type="number" id="pts-input" placeholder="Qtd." style="width:72px;flex:none;" min="1" />
+          <button class="btn-primary" onclick="addPts()">Adicionar</button>
+        </div>
+      </div>
+      <p class="section-label">Top clientes</p>
+      <div class="client-list" id="client-list"></div>
+    </div>
+  </div>
+
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+  let pts = 320, stamps = 7, method = 'compra';
+  const hints = {
+    compra: 'Cada compra = +5 pts automático',
+    valor: 'Informe o valor gasto — 1 pt a cada R$10',
+    carimbo: 'Registra um carimbo no cartão do cliente'
+  };
+  const hist = [
+    {l:'Café com leite', d:'hoje, 09:14', p:+5, i:'ti-coffee'},
+    {l:'Compra R$32', d:'hoje, 09:14', p:+3, i:'ti-currency-real'},
+    {l:'Resgate — Desconto 15%', d:'ontem, 15:30', p:-80, i:'ti-gift'},
+    {l:'Cappuccino + bolo', d:'ontem, 08:50', p:+10, i:'ti-coffee'},
+    {l:'Compra R$55', d:'12/05, 11:00', p:+5, i:'ti-currency-real'},
+    {l:'Carimbo #7', d:'10/05, 08:30', p:0, i:'ti-stamp', st:true},
+  ];
+  const clients = [
+    {n:'Ana Lima', in:'AL', p:320, bg:'#FAE8EB', tc:'#8B1A28'},
+    {n:'Bruno Costa', in:'BC', p:215, bg:'#E1F5EE', tc:'#085041'},
+    {n:'Camila Torres', in:'CT', p:190, bg:'#EEEDFE', tc:'#3C3489'},
+    {n:'Diego Souza', in:'DS', p:142, bg:'#F5EFE6', tc:'#7A4426'},
+  ];
+
+  function showPage(id) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.getElementById('page-' + id).classList.add('active');
+    document.getElementById('tab-' + id).classList.add('active');
+  }
+  function renderStamps() {
+    const g = document.getElementById('stamp-grid'); g.innerHTML = '';
+    for (let i = 0; i < 10; i++) {
+      const s = document.createElement('div');
+      s.className = 'stamp' + (i < stamps ? ' filled' : '');
+      s.innerHTML = i < stamps ? '<i class="ti ti-coffee"></i>' : '';
+      g.appendChild(s);
+    }
+    document.getElementById('stamp-txt').textContent = stamps + ' de 10';
+    document.getElementById('stamps-left').textContent = Math.max(0, 10 - stamps);
+  }
+  function renderHist() {
+    document.getElementById('history-list').innerHTML = hist.map(h => `
+      <div class="history-row">
+        <div class="h-icon"><i class="ti ${h.i}"></i></div>
+        <div style="flex:1"><div class="h-label">${h.l}</div><div class="h-date">${h.d}</div></div>
+        <div class="h-pts ${h.p > 0 ? 'pts-plus' : h.p < 0 ? 'pts-minus' : ''}">
+          ${h.p > 0 ? '+' + h.p : h.p < 0 ? h.p : ''}
+          ${h.st ? '<i class="ti ti-stamp" style="color:var(--red);font-size:15px;"></i>' : h.p !== 0 ? ' pts' : ''}
+        </div>
+      </div>`).join('');
+  }
+  function renderClients() {
+    document.getElementById('client-list').innerHTML = clients.map((c, i) => `
+      <div class="client-row">
+        <div class="avatar" style="background:${c.bg};color:${c.tc};">${c.in}</div>
+        <div><div class="client-name">${c.n}</div><div class="client-sub">${['Diamante 💎','Ouro ⭐','Ouro ⭐','Bronze 🥉'][i]}</div></div>
+        <span class="pts-pill">${c.p} pts</span>
+      </div>`).join('');
+  }
+  function updateUI() {
+    document.getElementById('disp-pts').textContent = pts;
+    document.getElementById('pts-rewards').textContent = pts + ' pts';
+    const pct = Math.min(100, Math.max(0, Math.round(((pts - 200) / 300) * 100)));
+    document.getElementById('prog-bar').style.width = pct + '%';
+    if (pts >= 500) { document.getElementById('disp-level').textContent = '💎 Cliente Diamante'; document.getElementById('prog-label').textContent = 'Nível máximo atingido!'; }
+    else if (pts >= 200) { document.getElementById('disp-level').textContent = '⭐ Cliente Ouro'; document.getElementById('prog-label').textContent = (500 - pts) + ' pts para Diamante'; }
+    else { document.getElementById('disp-level').textContent = '🥉 Cliente Bronze'; document.getElementById('prog-label').textContent = (200 - pts) + ' pts para Ouro'; }
+    const need = Math.max(0, 500 - pts);
+    const bc = document.getElementById('brinde-card'), bb = document.getElementById('brinde-badge');
+    if (need === 0) { bc.classList.remove('locked'); bb.textContent = 'Disponível'; bb.className = 'reward-badge badge-ok'; bc.onclick = () => redeem(bc, 500, 'Brinde surpresa'); }
+    else { bb.textContent = need + ' pts faltam'; }
+    clients[0].p = pts; renderClients();
+  }
+  function redeem(el, cost, name) {
+    if (el.classList.contains('locked')) return;
+    if (pts < cost) { toast('Pontos insuficientes'); return; }
+    pts -= cost; hist.unshift({l: 'Resgate — ' + name, d: 'agora', p: -cost, i: 'ti-gift'});
+    updateUI(); renderHist(); toast('✓ ' + name + ' resgatado!');
+  }
+  function selMethod(el, m) {
+    document.querySelectorAll('.mtab').forEach(t => t.classList.remove('active'));
+    el.classList.add('active'); method = m;
+    document.getElementById('m-hint').textContent = hints[m];
+  }
+  function addPts() {
+    const s = document.getElementById('cli-search').value.trim();
+    const v = parseInt(document.getElementById('pts-input').value) || 1;
+    if (!s) { toast('Informe o cliente'); return; }
+    if (method === 'carimbo') { stamps = Math.min(10, stamps + 1); renderStamps(); toast('✓ Carimbo #' + stamps + ' adicionado!'); return; }
+    const add = method === 'compra' ? v * 5 : Math.floor(v / 10);
+    pts += add; hist.unshift({l: method === 'compra' ? 'Compra registrada' : 'Compra R$' + v, d: 'agora', p: add, i: 'ti-coffee'});
+    updateUI(); renderHist();
+    document.getElementById('cli-search').value = '';
+    document.getElementById('pts-input').value = '';
+    toast('✓ +' + add + ' pts adicionados!');
+  }
+  function fakeLogin(via) { toast('✓ Cadastro via ' + via + ' realizado!'); }
+  function toast(msg) {
+    const t = document.getElementById('toast'); t.textContent = msg;
+    t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 2500);
+  }
+
+  renderStamps(); renderHist(); renderClients(); updateUI();
+</script>
+</body>
+</html>
